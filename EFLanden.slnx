@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="LandenModel/LandenModel.csproj" />
+  <Project Path="LandenUI/LandenUI.csproj" />
+</Solution>
