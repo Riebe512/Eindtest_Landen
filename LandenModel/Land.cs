@@ -10,5 +10,5 @@ public class Land
     public string Naam { get; set; }
 
     public ICollection<Stad> Steden { get; set; }
-    public ICollection<LandenTaal> LandenTalen { get; set; }
+    public ICollection<Taal> Talen { get; set; }
 }

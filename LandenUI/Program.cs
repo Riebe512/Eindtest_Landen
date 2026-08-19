@@ -1,4 +1,5 @@
 ﻿using LandenModel;
+using Microsoft.EntityFrameworkCore;
 using var context = new LandenContext();
 
 var landen = from l in context.Landen
@@ -23,21 +24,19 @@ do
 } while (gekozenLand is null);
 
 
-var steden = from s in context.Steden
-             where s.LandCode == gekozenLandCode
-             orderby s.Naam
-             select s;
-
-var talen = from lt in context.LandenTalen
-            where lt.LandCode == gekozenLandCode
-            select lt.Taal;
+var GekozenLand = context.Landen
+    .Where(l => l.LandCode == gekozenLandCode)
+    .Include(l => l.Steden)
+    .Include(l => l.Talen)
+    .FirstOrDefault();
 
 Console.WriteLine($"\nSteden in {gekozenLand.Naam}:");
-foreach (var s in steden)
+
+foreach (var s in GekozenLand.Steden)
     Console.WriteLine(s.Naam);
 
 Console.WriteLine("\nTalen:");
-foreach (var taal in talen)
+foreach (var taal in GekozenLand.Talen)
     Console.WriteLine(taal.Naam);
 
 

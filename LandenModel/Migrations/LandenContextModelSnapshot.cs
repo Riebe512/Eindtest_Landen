@@ -62,68 +62,6 @@ namespace LandenModel.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LandenModel.LandenTaal", b =>
-                {
-                    b.Property<string>("LandCode")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TaalCode")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("LandCode", "TaalCode");
-
-                    b.HasIndex("TaalCode");
-
-                    b.ToTable("LandenTalen");
-
-                    b.HasData(
-                        new
-                        {
-                            LandCode = "BEL",
-                            TaalCode = "de"
-                        },
-                        new
-                        {
-                            LandCode = "BEL",
-                            TaalCode = "fr"
-                        },
-                        new
-                        {
-                            LandCode = "BEL",
-                            TaalCode = "nl"
-                        },
-                        new
-                        {
-                            LandCode = "DEU",
-                            TaalCode = "de"
-                        },
-                        new
-                        {
-                            LandCode = "FRA",
-                            TaalCode = "fr"
-                        },
-                        new
-                        {
-                            LandCode = "LUX",
-                            TaalCode = "de"
-                        },
-                        new
-                        {
-                            LandCode = "LUX",
-                            TaalCode = "fr"
-                        },
-                        new
-                        {
-                            LandCode = "LUX",
-                            TaalCode = "lb"
-                        },
-                        new
-                        {
-                            LandCode = "NLD",
-                            TaalCode = "nl"
-                        });
-                });
-
             modelBuilder.Entity("LandenModel.Stad", b =>
                 {
                     b.Property<int>("StadNr")
@@ -263,23 +201,66 @@ namespace LandenModel.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LandenModel.LandenTaal", b =>
+            modelBuilder.Entity("LandenTaal", b =>
                 {
-                    b.HasOne("LandenModel.Land", "Land")
-                        .WithMany("LandenTalen")
-                        .HasForeignKey("LandCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("LandCode")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasOne("LandenModel.Taal", "Taal")
-                        .WithMany("LandenTalen")
-                        .HasForeignKey("TaalCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("TaalCode")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Navigation("Land");
+                    b.HasKey("LandCode", "TaalCode");
 
-                    b.Navigation("Taal");
+                    b.HasIndex("TaalCode");
+
+                    b.ToTable("LandenTaal");
+
+                    b.HasData(
+                        new
+                        {
+                            LandCode = "BEL",
+                            TaalCode = "de"
+                        },
+                        new
+                        {
+                            LandCode = "BEL",
+                            TaalCode = "fr"
+                        },
+                        new
+                        {
+                            LandCode = "BEL",
+                            TaalCode = "nl"
+                        },
+                        new
+                        {
+                            LandCode = "DEU",
+                            TaalCode = "de"
+                        },
+                        new
+                        {
+                            LandCode = "FRA",
+                            TaalCode = "fr"
+                        },
+                        new
+                        {
+                            LandCode = "LUX",
+                            TaalCode = "de"
+                        },
+                        new
+                        {
+                            LandCode = "LUX",
+                            TaalCode = "fr"
+                        },
+                        new
+                        {
+                            LandCode = "LUX",
+                            TaalCode = "lb"
+                        },
+                        new
+                        {
+                            LandCode = "NLD",
+                            TaalCode = "nl"
+                        });
                 });
 
             modelBuilder.Entity("LandenModel.Stad", b =>
@@ -293,16 +274,24 @@ namespace LandenModel.Migrations
                     b.Navigation("Land");
                 });
 
-            modelBuilder.Entity("LandenModel.Land", b =>
+            modelBuilder.Entity("LandenTaal", b =>
                 {
-                    b.Navigation("LandenTalen");
+                    b.HasOne("LandenModel.Land", null)
+                        .WithMany()
+                        .HasForeignKey("LandCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Steden");
+                    b.HasOne("LandenModel.Taal", null)
+                        .WithMany()
+                        .HasForeignKey("TaalCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("LandenModel.Taal", b =>
+            modelBuilder.Entity("LandenModel.Land", b =>
                 {
-                    b.Navigation("LandenTalen");
+                    b.Navigation("Steden");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,12 +8,9 @@ public class LandenContext : DbContext
     public DbSet<Land> Landen { get; set; }
     public DbSet<Stad> Steden { get; set; }
     public DbSet<Taal> Talen { get; set; }
-    public DbSet<LandenTaal> LandenTalen { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<LandenTaal>()
-            .HasKey(lt => new { lt.LandCode, lt.TaalCode });
 
         modelBuilder.Entity<Land>()
             .HasMany(l => l.Steden)
@@ -21,14 +18,34 @@ public class LandenContext : DbContext
             .HasForeignKey(s => s.LandCode);
 
         modelBuilder.Entity<Land>()
-            .HasMany(l => l.LandenTalen)
-            .WithOne(lt => lt.Land)
-            .HasForeignKey(lt => lt.LandCode);
+            .HasMany(l => l.Talen)
+            .WithMany(lt => lt.Landen)
+            .UsingEntity<Dictionary<string, object>>(
+                "LandenTaal",
 
-        modelBuilder.Entity<Taal>()
-            .HasMany(t => t.LandenTalen)
-            .WithOne(lt => lt.Taal)
-            .HasForeignKey(lt => lt.TaalCode);
+                JoinToTaal => JoinToTaal
+                    .HasOne<Taal>()
+                    .WithMany()
+                    .HasForeignKey("TaalCode"),
+                joinToLand => joinToLand
+                    .HasOne<Land>()
+                    .WithMany()
+                    .HasForeignKey("LandCode"),
+                joinEntity =>
+                {
+                    joinEntity.HasKey("LandCode", "TaalCode");
+                    joinEntity.HasData(
+                        new { LandCode = "BEL", TaalCode = "de" },
+                        new { LandCode = "BEL", TaalCode = "fr" },
+                        new { LandCode = "BEL", TaalCode = "nl" },
+                        new { LandCode = "DEU", TaalCode = "de" },
+                        new { LandCode = "FRA", TaalCode = "fr" },
+                        new { LandCode = "LUX", TaalCode = "de" },
+                        new { LandCode = "LUX", TaalCode = "fr" },
+                        new { LandCode = "LUX", TaalCode = "lb" },
+                        new { LandCode = "NLD", TaalCode = "nl" }
+                    );
+                });
 
         modelBuilder.Entity<Land>().HasData(
             new Land { LandCode = "BEL", Naam = "België" },
@@ -60,24 +77,12 @@ public class LandenContext : DbContext
             new Taal { TaalCode = "lb", Naam = "Luxemburgs" },
             new Taal { TaalCode = "nl", Naam = "Nederlands" }
         );
-
-        modelBuilder.Entity<LandenTaal>().HasData(
-            new LandenTaal { LandCode = "BEL", TaalCode = "de" },
-            new LandenTaal { LandCode = "BEL", TaalCode = "fr" },
-            new LandenTaal { LandCode = "BEL", TaalCode = "nl" },
-            new LandenTaal { LandCode = "DEU", TaalCode = "de" },
-            new LandenTaal { LandCode = "FRA", TaalCode = "fr" },
-            new LandenTaal { LandCode = "LUX", TaalCode = "de" },
-            new LandenTaal { LandCode = "LUX", TaalCode = "fr" },
-            new LandenTaal { LandCode = "LUX", TaalCode = "lb" },
-            new LandenTaal { LandCode = "NLD", TaalCode = "nl" }
-        );
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         IConfigurationRoot config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
+            .AddJsonFile("Appsettings.json")
             .Build();
 
         optionsBuilder.UseSqlServer(

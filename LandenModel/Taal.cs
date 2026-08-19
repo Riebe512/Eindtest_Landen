@@ -8,5 +8,5 @@ public class Taal
     [Key]
     public string TaalCode { get; set; }
     public string Naam {  get; set; }
-    public ICollection<LandenTaal> LandenTalen { get; set; }
+    public ICollection<Land> Landen { get; set; }
 }
